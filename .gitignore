@@ -1,0 +1,22 @@
+
+## Visual Studio Ignore Template
+[Bb]in/
+[Oo]bj/
+[Tt]est[Rr]esults/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Database & Logs
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+logs/
+
+## Secrets
+client_secrets.json
+token.json
+appsettings.json

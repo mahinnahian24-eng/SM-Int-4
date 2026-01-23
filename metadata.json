@@ -1,0 +1,14 @@
+{
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "technologies": [
+    "dotnet-8",
+    "wpf",
+    "sqlite",
+    "entity-framework-core",
+    "google-drive-api"
+  ],
+  "name": "",
+  "description": ""
+}

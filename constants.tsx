@@ -1,0 +1,31 @@
+
+import React from 'react';
+import { 
+  LayoutDashboard, 
+  BookOpen, 
+  Package, 
+  FileText, 
+  Settings, 
+  PlusCircle, 
+  Database,
+  Building2
+} from 'lucide-react';
+
+export const NAVIGATION = [
+  { name: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
+  { name: 'Company', icon: <Building2 size={20} />, path: '/company' },
+  { name: 'Masters', icon: <BookOpen size={20} />, path: '/masters' },
+  { name: 'Inventory', icon: <Package size={20} />, path: '/inventory' },
+  { name: 'Vouchers', icon: <PlusCircle size={20} />, path: '/vouchers' },
+  { name: 'Reports', icon: <FileText size={20} />, path: '/reports' },
+  { name: 'Backup', icon: <Database size={20} />, path: '/backup' },
+  { name: 'Settings', icon: <Settings size={20} />, path: '/settings' },
+];
+
+export const VOUCHER_COLORS: Record<string, string> = {
+  Sales: 'bg-orange-100 text-orange-700',
+  Purchase: 'bg-blue-100 text-blue-700',
+  Receipt: 'bg-emerald-100 text-emerald-700',
+  Payment: 'bg-rose-100 text-rose-700',
+  Journal: 'bg-purple-100 text-purple-700',
+};

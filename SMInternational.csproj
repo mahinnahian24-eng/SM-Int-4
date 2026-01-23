@@ -1,0 +1,27 @@
+
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>SMInternational</AssemblyName>
+    <Product>SM INTERNATIONAL</Product>
+    <Version>1.2.0</Version>
+    <Company>SM INTERNATIONAL</Company>
+    <Description>Advanced Inventory and Accounting Solution (Build 2024.Q2)</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="8.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+    <PackageReference Include="ClosedXML" Version="0.102.1" />
+    <PackageReference Include="FluentFTP" Version="48.0.1" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.64.0.3235" />
+    <PackageReference Include="Twilio" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+  </ItemGroup>
+</Project>
