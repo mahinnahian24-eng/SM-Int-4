@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { Search, Menu, X, Command } from 'lucide-react';
+import { Search, Menu, X, Command, LogOut, User as UserIcon } from 'lucide-react';
 import { NAVIGATION } from './constants';
 import Dashboard from './views/Dashboard';
 import Masters from './views/Masters';
@@ -10,7 +10,8 @@ import Reports from './views/Reports';
 import SettingsView from './views/SettingsView';
 import BackupView from './views/BackupView';
 import CompanySettings from './views/CompanySettings';
-import { Ledger, StockItem, Voucher, Company, VoucherType, LedgerType, AccountGroup, VoucherPrintSettings } from './types';
+import LoginView from './views/LoginView';
+import { Ledger, StockItem, Voucher, Company, VoucherType, LedgerType, AccountGroup, VoucherPrintSettings, User, UserRole } from './types';
 
 const RouterContext = React.createContext<{ path: string; setPath: (path: string) => void }>({
   path: '/',
@@ -93,12 +94,18 @@ const INITIAL_PRINT_SETTINGS: VoucherPrintSettings = {
   purchaseTitle: "PURCHASE VOUCHER"
 };
 
+const INITIAL_USERS: User[] = [
+  { id: '1', username: 'mahin', password: '1122', role: UserRole.ADMIN, isActive: true }
+];
+
 const App: React.FC = () => {
   const [company, setCompany] = useState<Company>(INITIAL_COMPANY);
   const [printSettings, setPrintSettings] = useState<VoucherPrintSettings>(INITIAL_PRINT_SETTINGS);
   const [ledgers, setLedgers] = useState<Ledger[]>([]);
   const [items, setItems] = useState<StockItem[]>([]);
   const [vouchers, setVouchers] = useState<Voucher[]>([]);
+  const [users, setUsers] = useState<User[]>(INITIAL_USERS);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   const [path, setPath] = useState('/');
@@ -110,16 +117,24 @@ const App: React.FC = () => {
     const savedItems = localStorage.getItem('items');
     const savedCompany = localStorage.getItem('companyProfile');
     const savedSettings = localStorage.getItem('printSettings');
+    const savedUsers = localStorage.getItem('appUsers');
 
     if (savedVouchers) setVouchers(JSON.parse(savedVouchers));
     if (savedLedgers) setLedgers(JSON.parse(savedLedgers));
     if (savedItems) setItems(JSON.parse(savedItems));
     if (savedCompany) setCompany(JSON.parse(savedCompany));
     if (savedSettings) setPrintSettings(JSON.parse(savedSettings));
+    if (savedUsers) setUsers(JSON.parse(savedUsers));
   }, []);
+
+  const handleUpdateUsers = (newUsers: User[]) => {
+    setUsers(newUsers);
+    localStorage.setItem('appUsers', JSON.stringify(newUsers));
+  };
 
   // Global Shortcuts for Quick Actions
   useEffect(() => {
+    if (!currentUser) return;
     const handleShortcuts = (e: KeyboardEvent) => {
       if (e.key === 'F2') {
         e.preventDefault();
@@ -131,7 +146,7 @@ const App: React.FC = () => {
     };
     window.addEventListener('keydown', handleShortcuts);
     return () => window.removeEventListener('keydown', handleShortcuts);
-  }, []);
+  }, [currentUser]);
 
   const navigateToNewSale = () => {
     console.log("Dashboard Quick Action: New Sale clicked");
@@ -163,6 +178,10 @@ const App: React.FC = () => {
     setPath('/vouchers');
   };
 
+  if (!currentUser) {
+    return <LoginView onLogin={setCurrentUser} users={users} />;
+  }
+
   return (
     <RouterContext.Provider value={{ path, setPath }}>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
@@ -189,11 +208,21 @@ const App: React.FC = () => {
                 <Search className="text-gray-400" size={18} />
                 <input type="text" placeholder="Global Search (Alt+S)" className="bg-gray-100 rounded-full px-4 py-2 text-sm w-80 outline-none" />
              </div>
-             <div className="flex items-center gap-3">
-                <div className="text-right hidden sm:block">
-                  <p className="text-xs font-black text-gray-900 uppercase tracking-widest">{company.name}</p>
+             <div className="flex items-center gap-6">
+                <div className="flex items-center gap-3 pr-6 border-r">
+                    <div className="text-right hidden sm:block">
+                        <p className="text-xs font-black text-gray-900 uppercase tracking-widest">{currentUser.username}</p>
+                        <p className="text-[10px] font-bold text-orange-600 uppercase">{currentUser.role}</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center font-bold uppercase border"><UserIcon size={20} /></div>
                 </div>
-                <div className="w-10 h-10 rounded-full bg-orange-600 text-white flex items-center justify-center font-bold uppercase">{company.name.charAt(0)}</div>
+                <button 
+                  onClick={() => setCurrentUser(null)}
+                  className="p-2 hover:bg-rose-50 text-gray-400 hover:text-rose-600 rounded-xl transition-all group"
+                  title="Logout"
+                >
+                    <LogOut size={20} />
+                </button>
              </div>
           </header>
 
@@ -206,7 +235,7 @@ const App: React.FC = () => {
               <Route path="/vouchers" element={<Vouchers vouchers={vouchers} addVoucher={addVoucher} ledgers={ledgers} items={items} company={company} editingVoucher={editingVoucher} clearEdit={() => setEditingVoucher(null)} />} />
               <Route path="/reports" element={<Reports vouchers={vouchers} ledgers={ledgers} items={items} company={company} onEditVoucher={handleEditVoucher} />} />
               <Route path="/backup" element={<BackupView />} />
-              <Route path="/settings" element={<SettingsView company={company} setCompany={setCompany} />} />
+              <Route path="/settings" element={<SettingsView company={company} setCompany={setCompany} users={users} setUsers={handleUpdateUsers} currentUser={currentUser} />} />
             </Routes>
           </main>
         </div>

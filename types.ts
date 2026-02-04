@@ -29,6 +29,19 @@ export interface Ledger {
   email?: string;
 }
 
+export enum UserRole {
+  ADMIN = 'Admin',
+  USER = 'User'
+}
+
+export interface User {
+  id: string;
+  username: string;
+  password?: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
 export interface MessageHistory {
   id: string;
   ledgerId: string;
