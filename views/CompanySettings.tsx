@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Save, Building2, MapPin, Phone, Mail, Globe, Landmark, CreditCard, LayoutTemplate, Eye, Printer, CheckCircle2 } from 'lucide-react';
 import { Company, VoucherPrintSettings } from '../types';
+import { APP_LOGO } from '../constants';
 
 interface CompanySettingsProps {
   company: Company;
@@ -72,7 +73,7 @@ const CompanySettings: React.FC<CompanySettingsProps> = ({ company, setCompany, 
               <div className="w-full lg:w-72 space-y-6">
                  <div className="bg-[#0F172A] rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center shadow-2xl shadow-slate-900/20 group relative overflow-hidden">
                     <div className="absolute inset-0 bg-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <img src="logo.png" alt="SM" className="w-40 h-40 object-contain mb-6 drop-shadow-[0_0_15px_rgba(234,88,12,0.4)] animate-pulse-slow" />
+                    <img src={APP_LOGO} alt="SM" className="w-40 h-40 object-contain mb-6 drop-shadow-[0_0_15px_rgba(234,88,12,0.4)] animate-pulse-slow relative z-10" />
                     <p className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] relative z-10">Brand Identity</p>
                  </div>
                  <div className="bg-orange-50 p-6 rounded-[1.5rem] border border-orange-100">

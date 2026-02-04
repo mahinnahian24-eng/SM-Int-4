@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Lock, User, Key, AlertCircle, ChevronRight } from 'lucide-react';
 import { User as UserType } from '../types';
+import { APP_LOGO } from '../constants';
 
 interface LoginViewProps {
   onLogin: (user: UserType) => void;
@@ -36,7 +37,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, users }) => {
           <div className="bg-[#0F172A] p-12 text-center text-white relative">
             <div className="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
             <img 
-              src="logo.png" 
+              src={APP_LOGO} 
               alt="SM" 
               className="w-44 h-44 mx-auto mb-6 object-contain drop-shadow-[0_0_20px_rgba(234,88,12,0.4)] animate-pulse-slow relative z-10" 
             />

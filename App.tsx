@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, Menu, X, Command, LogOut, User as UserIcon } from 'lucide-react';
-import { NAVIGATION } from './constants';
+import { NAVIGATION, APP_LOGO } from './constants';
 import Dashboard from './views/Dashboard';
 import Masters from './views/Masters';
 import Inventory from './views/Inventory';
@@ -184,8 +184,8 @@ const App: React.FC = () => {
       <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
         <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-[#0F172A] text-slate-400 transition-all duration-300 flex flex-col shrink-0`}>
           <div className="p-4 flex items-center gap-3">
-            <div className="bg-white/5 p-1 rounded-xl">
-              <img src="logo.png" alt="SM" className="w-10 h-10 object-contain" />
+            <div className="bg-white/5 p-1 rounded-xl flex-shrink-0">
+              <img src={APP_LOGO} alt="SM" className="w-10 h-10 object-contain" />
             </div>
             {isSidebarOpen && (
               <div className="flex flex-col">
