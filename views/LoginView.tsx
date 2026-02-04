@@ -27,36 +27,34 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, users }) => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-4">
       <div className="w-full max-w-md animate-in zoom-in duration-300">
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border">
-          <div className="bg-orange-600 p-10 text-center text-white space-y-4">
-            <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-2 backdrop-blur-sm">
-              <Command size={40} />
-            </div>
-            <h1 className="text-2xl font-black uppercase tracking-widest">SM International</h1>
-            <p className="text-white/70 text-sm font-medium">Business Management Portal</p>
+        <div className="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border">
+          <div className="bg-slate-900 p-10 text-center text-white space-y-4">
+            <img src="logo.png" alt="SM International Logo" className="w-40 h-40 mx-auto mb-2 object-contain drop-shadow-2xl animate-pulse-slow" />
+            <h1 className="text-2xl font-black uppercase tracking-widest text-orange-600">SM International</h1>
+            <p className="text-slate-400 text-sm font-medium">Cloud Accounting Terminal</p>
           </div>
 
           <form onSubmit={handleLogin} className="p-10 space-y-6">
             <div className="space-y-4">
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input 
                   autoFocus
                   type="text" 
                   placeholder="Username" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 ring-orange-500 font-bold text-gray-800 transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 ring-orange-500 font-bold text-slate-800 transition-all"
                 />
               </div>
               <div className="relative">
-                <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                 <input 
                   type="password" 
                   placeholder="Password" 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 bg-gray-50 border rounded-2xl outline-none focus:ring-2 ring-orange-500 font-bold text-gray-800 transition-all"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-50 border rounded-2xl outline-none focus:ring-2 ring-orange-500 font-bold text-slate-800 transition-all"
                 />
               </div>
             </div>
@@ -76,7 +74,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onLogin, users }) => {
             </button>
 
             <div className="text-center pt-2">
-               <p className="text-[10px] text-gray-400 font-black uppercase tracking-tighter">Secure Terminal Connection Verified</p>
+               <p className="text-[10px] text-slate-400 font-black uppercase tracking-tighter">Secure Terminal Connection Verified</p>
             </div>
           </form>
         </div>

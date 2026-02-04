@@ -36,12 +36,20 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
 
   const headerTitle = voucher.type === VoucherType.SALES ? printSettings.salesTitle : printSettings.purchaseTitle;
 
+  const handlePrintInternal = () => {
+    if (onPrint) {
+      onPrint(voucher);
+    } else {
+      window.print();
+    }
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-      <div className={`bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in zoom-in duration-300 ${printSettings.paperSize === 'A5' ? 'aspect-[1/1.4]' : ''}`}>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4 overflow-y-auto print:bg-white print:p-0 print:static">
+      <div className={`bg-white w-full max-w-4xl rounded-3xl shadow-2xl overflow-hidden flex flex-col my-auto animate-in zoom-in duration-300 print:shadow-none print:rounded-none print:w-full print:max-w-none print:my-0 ${printSettings.paperSize === 'A5' ? 'aspect-[1/1.4]' : ''}`}>
         
-        {/* Header Toolbar */}
-        <div className="px-8 py-4 border-b flex justify-between items-center bg-gray-50 shrink-0">
+        {/* Header Toolbar - Hidden in Print */}
+        <div className="px-8 py-4 border-b flex justify-between items-center bg-gray-50 shrink-0 print:hidden">
           <div className="flex items-center gap-4">
             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
                voucher.type === VoucherType.SALES ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
@@ -52,17 +60,19 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
           </div>
           <div className="flex items-center gap-2">
             <button 
-              onClick={() => onPrint?.(voucher)}
-              className="p-2 hover:bg-white border rounded-xl text-indigo-600 transition-all flex items-center gap-2 px-4 font-bold text-sm"
+              onClick={handlePrintInternal}
+              className="p-2 bg-indigo-600 hover:bg-indigo-700 border rounded-xl text-white transition-all flex items-center gap-2 px-6 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-indigo-600/20"
             >
-              <Printer size={18} /> Print Now
+              <Printer size={16} /> Print Invoice
             </button>
-            <button 
-              onClick={() => onEdit?.(voucher)}
-              className="p-2 hover:bg-white border rounded-xl text-amber-600 transition-all px-4 font-bold text-sm"
-            >
-              Edit
-            </button>
+            {onEdit && (
+              <button 
+                onClick={() => onEdit(voucher)}
+                className="p-2 hover:bg-white border rounded-xl text-amber-600 transition-all px-4 font-bold text-sm"
+              >
+                Edit
+              </button>
+            )}
             <button onClick={onClose} className="p-2 hover:bg-rose-50 text-gray-400 hover:text-rose-600 transition-colors">
               <X size={24} />
             </button>
@@ -70,7 +80,7 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
         </div>
 
         {/* Invoice Content */}
-        <div className="flex-1 overflow-y-auto p-12 space-y-10 bg-white" id="printable-area">
+        <div className="flex-1 overflow-y-auto p-12 space-y-10 bg-white print:overflow-visible print:p-0" id="printable-area">
           {/* Company & Info */}
           <div className="flex justify-between items-start">
             <div className="space-y-1">
@@ -83,18 +93,18 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
               <p className="text-sm font-bold mt-2">VAT: {company.vatNumber}</p>
             </div>
             <div className="text-right space-y-4">
-              <div className="inline-block bg-gray-100 px-6 py-4 rounded-2xl">
+              <div className="inline-block bg-gray-100 px-6 py-4 rounded-2xl print:bg-transparent print:border print:border-gray-200">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{headerTitle}</p>
                 <p className="text-3xl font-black text-gray-900">{company.currency} {voucher.totalAmount.toLocaleString()}</p>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-12 border-y py-8">
+          <div className="grid grid-cols-2 gap-12 border-y py-8 print:py-4">
             <div className="space-y-4">
                <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest">Billing To</h4>
                <div className="flex gap-4">
-                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0">
+                  <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center shrink-0 print:hidden">
                     <User size={24} />
                   </div>
                   <div>
@@ -124,21 +134,21 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
                   {printSettings.showSKU && <th className="pb-4">SKU</th>}
                   <th className="pb-4 text-right">Qty</th>
                   <th className="pb-4 text-right">Rate</th>
-                  {printSettings.showDiscount && <th className="pb-4 text-right">Disc</th>}
+                  {printSettings.showDiscount && <th className="pb-4 text-right">Disc (%)</th>}
                   {printSettings.showTax && <th className="pb-4 text-right">Tax</th>}
                   <th className="pb-4 text-right">Amount</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
                 {voucher.items?.map((item, idx) => (
-                  <tr key={idx}>
+                  <tr key={idx} className="print:break-inside-avoid">
                     <td className="py-5">
                       <p className="font-bold text-gray-900">{item.itemName}</p>
                     </td>
                     {printSettings.showSKU && <td className="py-5 text-gray-500 text-xs">#{item.itemId.slice(0, 5)}</td>}
                     <td className="py-5 text-right font-medium">{item.quantity}</td>
                     <td className="py-5 text-right font-medium">{item.rate.toLocaleString()}</td>
-                    {printSettings.showDiscount && <td className="py-5 text-right text-gray-500">{item.discount?.toLocaleString() || '0'}</td>}
+                    {printSettings.showDiscount && <td className="py-5 text-right text-indigo-600 font-bold">{item.discount ? `${item.discount}%` : '0%'}</td>}
                     {printSettings.showTax && <td className="py-5 text-right text-gray-500">{item.taxAmount?.toLocaleString() || '0'}</td>}
                     <td className="py-5 text-right font-black">{item.amount.toLocaleString()}</td>
                   </tr>
@@ -148,10 +158,10 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
           </div>
 
           {/* Footer & Bank */}
-          <div className="flex justify-between items-start border-t pt-8 mt-12">
+          <div className="flex justify-between items-start border-t pt-8 mt-12 print:mt-4">
             <div className="max-w-xs space-y-4">
               {printSettings.showBankInfo && company.bankName && (
-                <div className="bg-gray-50 p-4 rounded-xl space-y-1">
+                <div className="bg-gray-50 p-4 rounded-xl space-y-1 print:bg-transparent print:border print:border-gray-100">
                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Bank Details</h4>
                    <p className="text-xs font-bold text-gray-700">{company.bankName}</p>
                    <p className="text-xs text-gray-500">A/C: {company.accountNumber}</p>
@@ -176,7 +186,7 @@ const VoucherPreviewModal: React.FC<VoucherPreviewModalProps> = ({
         </div>
 
         {/* Footer Note */}
-        <div className="px-8 py-6 bg-gray-50 text-center border-t">
+        <div className="px-8 py-6 bg-gray-50 text-center border-t print:bg-transparent print:border-none">
            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">{printSettings.footerNote}</p>
            <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">{company.invoiceFooter || 'Digital Document Generated via CloudTally'}</p>
         </div>

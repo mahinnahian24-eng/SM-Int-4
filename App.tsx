@@ -186,9 +186,9 @@ const App: React.FC = () => {
     <RouterContext.Provider value={{ path, setPath }}>
       <div className="flex h-screen bg-gray-50 overflow-hidden">
         <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-[#1E293B] text-slate-300 transition-all duration-300 flex flex-col shrink-0`}>
-          <div className="p-6 flex items-center gap-3">
-            <div className="bg-orange-600 p-2 rounded-lg text-white"><Command size={24} /></div>
-            {isSidebarOpen && <span className="font-bold text-xl text-white tracking-tight">SM INTERNATIONAL</span>}
+          <div className="p-4 flex items-center gap-3">
+            <img src="logo.png" alt="Logo" className="w-12 h-12 object-contain rounded-lg" />
+            {isSidebarOpen && <span className="font-black text-lg text-white tracking-tight leading-tight">SM<br/>INTERNATIONAL</span>}
           </div>
           <nav className="flex-1 mt-4 px-3 space-y-1">
             {NAVIGATION.map((item) => (
@@ -232,7 +232,7 @@ const App: React.FC = () => {
               <Route path="/company" element={<CompanySettings company={company} setCompany={(c) => { setCompany(c); localStorage.setItem('companyProfile', JSON.stringify(c)); }} printSettings={printSettings} setPrintSettings={(s) => { setPrintSettings(s); localStorage.setItem('printSettings', JSON.stringify(s)); }} />} />
               <Route path="/masters" element={<Masters ledgers={ledgers} setLedgers={setLedgers} />} />
               <Route path="/inventory" element={<Inventory items={items} setItems={setItems} />} />
-              <Route path="/vouchers" element={<Vouchers vouchers={vouchers} addVoucher={addVoucher} ledgers={ledgers} items={items} company={company} editingVoucher={editingVoucher} clearEdit={() => setEditingVoucher(null)} />} />
+              <Route path="/vouchers" element={<Vouchers vouchers={vouchers} addVoucher={addVoucher} ledgers={ledgers} items={items} company={company} printSettings={printSettings} editingVoucher={editingVoucher} clearEdit={() => setEditingVoucher(null)} />} />
               <Route path="/reports" element={<Reports vouchers={vouchers} ledgers={ledgers} items={items} company={company} onEditVoucher={handleEditVoucher} />} />
               <Route path="/backup" element={<BackupView />} />
               <Route path="/settings" element={<SettingsView company={company} setCompany={setCompany} users={users} setUsers={handleUpdateUsers} currentUser={currentUser} />} />

@@ -68,45 +68,58 @@ const CompanySettings: React.FC<CompanySettingsProps> = ({ company, setCompany, 
       <div className="bg-white rounded-3xl border shadow-sm overflow-hidden min-h-[600px]">
         {activeTab === 'profile' ? (
           <form onSubmit={handleSaveCompany} className="p-10 space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="space-y-6">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Building2 className="text-indigo-600" /> Basic Information</h3>
-                <div className="space-y-4">
-                  <InputField label="Company Name" value={tempCompany.name} onChange={v => setTempCompany({...tempCompany, name: v})} icon={<Building2 size={16}/>} />
-                  <div className="space-y-1">
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Office Address</label>
-                    <textarea 
-                      className="w-full bg-gray-50 rounded-2xl p-4 text-sm font-medium outline-none focus:ring-2 ring-indigo-500 h-24"
-                      value={tempCompany.address}
-                      onChange={e => setTempCompany({...tempCompany, address: e.target.value})}
-                    />
+            <div className="flex flex-col md:flex-row gap-10 items-start">
+              <div className="w-full md:w-64 space-y-4">
+                 <div className="bg-slate-50 border-2 border-dashed rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center">
+                    <img src="logo.png" alt="Company Logo" className="w-32 h-32 object-contain mb-4 drop-shadow-lg" />
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Brand Identity</p>
+                 </div>
+                 <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100">
+                    <p className="text-[10px] font-black text-orange-600 uppercase mb-1">Branding Tip</p>
+                    <p className="text-[10px] text-orange-800 leading-tight">Your logo is used on the dashboard, login screen, and printed vouchers.</p>
+                 </div>
+              </div>
+              
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Building2 className="text-indigo-600" /> Basic Information</h3>
+                  <div className="space-y-4">
+                    <InputField label="Company Name" value={tempCompany.name} onChange={v => setTempCompany({...tempCompany, name: v})} icon={<Building2 size={16}/>} />
+                    <div className="space-y-1">
+                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Office Address</label>
+                      <textarea 
+                        className="w-full bg-gray-50 rounded-2xl p-4 text-sm font-medium outline-none focus:ring-2 ring-indigo-500 h-24"
+                        value={tempCompany.address}
+                        onChange={e => setTempCompany({...tempCompany, address: e.target.value})}
+                      />
+                    </div>
+                    <InputField label="VAT / Tax ID" value={tempCompany.vatNumber} onChange={v => setTempCompany({...tempCompany, vatNumber: v})} />
                   </div>
-                  <InputField label="VAT / Tax ID" value={tempCompany.vatNumber} onChange={v => setTempCompany({...tempCompany, vatNumber: v})} />
                 </div>
-              </div>
 
-              <div className="space-y-6">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Phone className="text-indigo-600" /> Contact & Web</h3>
-                <div className="space-y-4">
-                  <InputField label="Contact Phone" value={tempCompany.phone || ''} onChange={v => setTempCompany({...tempCompany, phone: v})} icon={<Phone size={16}/>} />
-                  <InputField label="Support Email" value={tempCompany.email || ''} onChange={v => setTempCompany({...tempCompany, email: v})} icon={<Mail size={16}/>} />
-                  <InputField label="Website" value={tempCompany.website || ''} onChange={v => setTempCompany({...tempCompany, website: v})} icon={<Globe size={16}/>} />
+                <div className="space-y-6">
+                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Phone className="text-indigo-600" /> Contact & Web</h3>
+                  <div className="space-y-4">
+                    <InputField label="Contact Phone" value={tempCompany.phone || ''} onChange={v => setTempCompany({...tempCompany, phone: v})} icon={<Phone size={16}/>} />
+                    <InputField label="Support Email" value={tempCompany.email || ''} onChange={v => setTempCompany({...tempCompany, email: v})} icon={<Mail size={16}/>} />
+                    <InputField label="Website" value={tempCompany.website || ''} onChange={v => setTempCompany({...tempCompany, website: v})} icon={<Globe size={16}/>} />
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-6">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Landmark className="text-indigo-600" /> Banking Details</h3>
-                <div className="space-y-4">
-                  <InputField label="Bank Name" value={tempCompany.bankName || ''} onChange={v => setTempCompany({...tempCompany, bankName: v})} icon={<Landmark size={16}/>} />
-                  <InputField label="Account Number" value={tempCompany.accountNumber || ''} onChange={v => setTempCompany({...tempCompany, accountNumber: v})} icon={<CreditCard size={16}/>} />
+                <div className="space-y-6">
+                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Landmark className="text-indigo-600" /> Banking Details</h3>
+                  <div className="space-y-4">
+                    <InputField label="Bank Name" value={tempCompany.bankName || ''} onChange={v => setTempCompany({...tempCompany, bankName: v})} icon={<Landmark size={16}/>} />
+                    <InputField label="Account Number" value={tempCompany.accountNumber || ''} onChange={v => setTempCompany({...tempCompany, accountNumber: v})} icon={<CreditCard size={16}/>} />
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-6">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Eye className="text-indigo-600" /> Invoice Content</h3>
-                <div className="space-y-4">
-                  <InputField label="Header Text (Global)" value={tempCompany.invoiceHeader || ''} onChange={v => setTempCompany({...tempCompany, invoiceHeader: v})} />
-                  <InputField label="Footer Disclaimer" value={tempCompany.invoiceFooter || ''} onChange={v => setTempCompany({...tempCompany, invoiceFooter: v})} />
+                <div className="space-y-6">
+                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Eye className="text-indigo-600" /> Invoice Content</h3>
+                  <div className="space-y-4">
+                    <InputField label="Header Text (Global)" value={tempCompany.invoiceHeader || ''} onChange={v => setTempCompany({...tempCompany, invoiceHeader: v})} />
+                    <InputField label="Footer Disclaimer" value={tempCompany.invoiceFooter || ''} onChange={v => setTempCompany({...tempCompany, invoiceFooter: v})} />
+                  </div>
                 </div>
               </div>
             </div>
