@@ -1,9 +1,9 @@
 
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { 
-  Plus, Trash2, Save, Calendar, Search, 
-  CheckCircle2, Printer, Eye, ArrowLeft, Percent, X, AlertTriangle, 
-  ChevronDown, Keyboard
+  Plus, Trash2, Save, Search, 
+  CheckCircle2, AlertTriangle, 
+  ChevronDown, Keyboard, X
 } from 'lucide-react';
 import { 
   Voucher, VoucherType, Ledger, StockItem, VoucherItem, LedgerEntry, Company, VoucherPrintSettings, LedgerType 
@@ -36,7 +36,6 @@ const Vouchers: React.FC<VouchersProps> = ({
   const [saveSuccess, setSaveSuccess] = useState<Voucher | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  // Refs for keyboard navigation
   const gridContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -77,7 +76,6 @@ const Vouchers: React.FC<VouchersProps> = ({
         item.itemName = stockItem.name;
         item.rate = activeTab === VoucherType.SALES ? stockItem.salesPrice : stockItem.purchasePrice;
         item.discount = 0;
-        // Auto-focus quantity field after selecting item
         setTimeout(() => {
           const nextInput = document.querySelector(`[data-pos="${index}-1"]`) as HTMLInputElement;
           nextInput?.focus();
@@ -99,7 +97,7 @@ const Vouchers: React.FC<VouchersProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, row: number, col: number) => {
-    const totalCols = 4; // Item, Qty, Rate, Disc
+    const totalCols = 4;
     const totalRows = voucherItems.length;
 
     switch (e.key) {
@@ -112,7 +110,6 @@ const Vouchers: React.FC<VouchersProps> = ({
         if (row > 0) focusCell(row - 1, col);
         break;
       case 'ArrowRight':
-        // Only move if cursor is at the end of the input
         if (col < totalCols - 1) focusCell(row, col + 1);
         break;
       case 'ArrowLeft':
@@ -155,12 +152,12 @@ const Vouchers: React.FC<VouchersProps> = ({
     setError(null);
 
     if (!selectedLedgerId) {
-      setError('Please select a party account.');
+      setError('VALIDATION_ERROR: Party account selection is mandatory.');
       return;
     }
 
     if (voucherItems.some(item => !item.itemId)) {
-      setError('Please select items for all rows.');
+      setError('VALIDATION_ERROR: Please specify items for all entries.');
       return;
     }
 
@@ -171,7 +168,7 @@ const Vouchers: React.FC<VouchersProps> = ({
     
     if (activeTab === VoucherType.SALES) {
       const salesLedger = ledgers.find(l => l.type === LedgerType.SALES) || ledgers.find(l => l.name.toLowerCase().includes('sales'));
-      if (!salesLedger) { setError('Sales Ledger not found.'); return; }
+      if (!salesLedger) { setError('LEDGER_ERROR: Primary Sales account missing in Masters.'); return; }
 
       ledgerEntries.push({ ledgerId: selectedLedger.id, ledgerName: selectedLedger.name, debit: totalAmount, credit: 0 });
       ledgerEntries.push({ ledgerId: salesLedger.id, ledgerName: salesLedger.name, debit: 0, credit: totalAmount });
@@ -179,7 +176,7 @@ const Vouchers: React.FC<VouchersProps> = ({
       ledgerEntries.push({ ledgerId: selectedLedger.id, ledgerName: selectedLedger.name, debit: totalAmount, credit: 0 });
     }
 
-    const autoRef = `REF-${Date.now()}`;
+    const autoRef = `SM-${Date.now()}`;
 
     const voucher: Voucher = {
       id: isEditMode ? editingVoucher!.id : Math.random().toString(36).substr(2, 9),
@@ -222,19 +219,19 @@ const Vouchers: React.FC<VouchersProps> = ({
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto animate-in fade-in duration-300">
-      <div className="flex justify-between items-center">
-        <div>
-           <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">{isEditMode ? 'Edit Transaction' : 'New Sale'}</h1>
-           <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest mt-1">Invoice ID: {voucherNumber}</p>
+    <div className="space-y-8 max-w-[1200px] mx-auto animate-in fade-in duration-500 pb-12">
+      <div className="flex justify-between items-end">
+        <div className="space-y-1">
+           <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">{isEditMode ? 'Modify Entry' : 'New Terminal Transaction'}</h1>
+           <p className="text-orange-600 text-[10px] font-black uppercase tracking-[0.3em]">{voucherNumber} // SYNC ACTIVE</p>
         </div>
-        <div className="flex bg-gray-200 p-1 rounded-2xl gap-1">
+        <div className="flex bg-slate-200/50 p-1.5 rounded-[1.5rem] gap-1 shadow-inner">
           {Object.values(VoucherType).slice(0, 4).map(type => (
             <button
               key={type}
               onClick={() => setActiveTab(type as VoucherType)}
-              className={`px-6 py-2 rounded-xl text-[10px] font-black uppercase transition-all ${
-                activeTab === type ? 'bg-white text-indigo-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'
+              className={`px-8 py-3 rounded-2xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                activeTab === type ? 'bg-white text-orange-600 shadow-md' : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               {type}
@@ -244,97 +241,98 @@ const Vouchers: React.FC<VouchersProps> = ({
       </div>
 
       {error && (
-        <div className="bg-rose-50 border border-rose-200 p-4 rounded-2xl flex items-center gap-3 text-rose-600 font-bold text-sm">
-          <AlertTriangle size={18} /> {error}
-          <button onClick={() => setError(null)} className="ml-auto"><X size={16} /></button>
+        <div className="bg-rose-50 border-2 border-rose-100 p-5 rounded-3xl flex items-center gap-4 text-rose-600 font-black text-[11px] uppercase tracking-wider animate-in slide-in-from-top-4">
+          <AlertTriangle size={20} /> {error}
+          <button onClick={() => setError(null)} className="ml-auto p-1 hover:bg-rose-100 rounded-full"><X size={18}/></button>
         </div>
       )}
 
-      <div className="bg-white rounded-[2.5rem] border shadow-2xl overflow-hidden flex flex-col">
-        {/* Top Header */}
-        <div className="p-8 bg-slate-50 border-b grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="space-y-6">
+      <div className="bg-white rounded-[3rem] border border-slate-100 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] overflow-hidden flex flex-col">
+        {/* Header Block */}
+        <div className="p-10 bg-[#FDFCFB] border-b border-slate-50 grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="space-y-8">
             <div className="relative">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block mb-2">Party Selection (Search Ledger)</label>
+              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Select Partner Account</label>
               <div className="relative group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-orange-500 transition-colors" size={20} />
                 <input 
                   type="text"
-                  placeholder="Type Customer Name..."
+                  placeholder="Search Customers / Suppliers..."
                   value={ledgerSearch}
                   onChange={e => {
                     setLedgerSearch(e.target.value);
                     setIsLedgerDropdownOpen(true);
                   }}
                   onFocus={() => setIsLedgerDropdownOpen(true)}
-                  className="w-full bg-white border rounded-2xl pl-12 pr-10 py-4 font-bold text-indigo-600 outline-none focus:ring-2 ring-indigo-500 shadow-sm transition-all"
+                  className="w-full bg-white border-2 border-transparent focus:border-orange-500/10 rounded-[1.5rem] pl-14 pr-12 py-5 font-black text-orange-600 outline-none focus:ring-4 ring-orange-500/5 shadow-sm transition-all placeholder:text-slate-300"
                 />
-                <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-transform ${isLedgerDropdownOpen ? 'rotate-180' : ''}`} size={18} />
+                <ChevronDown className={`absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 transition-transform duration-300 ${isLedgerDropdownOpen ? 'rotate-180' : ''}`} size={20} />
                 
                 {isLedgerDropdownOpen && (
-                  <div className="absolute top-full left-0 right-0 mt-2 bg-white border rounded-2xl shadow-2xl z-50 max-h-60 overflow-y-auto overflow-x-hidden animate-in slide-in-from-top-2 duration-200">
+                  <div className="absolute top-full left-0 right-0 mt-3 bg-white border border-slate-100 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] z-[100] max-h-72 overflow-y-auto overflow-x-hidden animate-in slide-in-from-top-4 duration-300 scrollbar-hide">
                     {filteredLedgers.length > 0 ? (
                       filteredLedgers.map(l => (
                         <button 
                           key={l.id}
-                          className="w-full text-left px-6 py-4 hover:bg-indigo-50 font-bold border-b last:border-none flex justify-between items-center group"
+                          className="w-full text-left px-8 py-5 hover:bg-orange-50 font-black border-b border-slate-50 last:border-none flex justify-between items-center group transition-colors"
                           onClick={() => {
                             setSelectedLedgerId(l.id);
                             setLedgerSearch(l.name);
                             setIsLedgerDropdownOpen(false);
                           }}
                         >
-                          <span>{l.name}</span>
-                          <span className="text-[10px] bg-indigo-100 text-indigo-600 px-2 py-1 rounded-full">{l.type}</span>
+                          <span className="text-slate-700 group-hover:text-orange-700">{l.name}</span>
+                          <span className="text-[10px] bg-slate-100 text-slate-500 px-3 py-1 rounded-full uppercase tracking-tighter">{l.type}</span>
                         </button>
                       ))
                     ) : (
-                      <div className="px-6 py-8 text-center text-gray-400 font-bold">No accounts found</div>
+                      <div className="px-8 py-10 text-center text-slate-300 font-black uppercase text-[10px] tracking-widest">No matching accounts</div>
                     )}
                   </div>
                 )}
               </div>
             </div>
             
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Billing Date</label>
-                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white border rounded-2xl px-5 py-4 font-bold focus:ring-2 ring-indigo-500 outline-none" />
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1">Posting Date</label>
+                <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white border-2 border-transparent focus:border-orange-500/10 rounded-2xl px-6 py-4 font-black text-slate-800 outline-none focus:ring-4 ring-orange-500/5 shadow-sm transition-all" />
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest block">Keyboard Guide</label>
-                <div className="bg-indigo-50 px-4 py-4 rounded-2xl border border-indigo-100 flex items-center gap-3 text-indigo-700">
-                  <Keyboard size={20} />
-                  <p className="text-[10px] font-bold uppercase leading-tight">Use Arrow keys & Enter <br/>for fast entry</p>
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1">Speed Entry</label>
+                <div className="bg-orange-50 px-6 py-4 rounded-2xl border border-orange-100 flex items-center gap-4 text-orange-700">
+                  <Keyboard size={24} className="animate-pulse" />
+                  <p className="text-[10px] font-black uppercase leading-tight tracking-tighter">Use Arrows & Enter<br/>for rapid processing</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-indigo-600 rounded-[2rem] p-8 text-white flex flex-col justify-between shadow-2xl shadow-indigo-600/30">
-            <span className="text-[10px] font-black opacity-60 uppercase tracking-widest">Calculated Net Total</span>
-            <div className="flex items-baseline gap-2">
-              <span className="text-2xl font-bold opacity-50">{company.currency}</span>
-              <span className="text-6xl font-black tracking-tight leading-none">{totalAmount.toLocaleString()}</span>
+          <div className="bg-[#0F172A] rounded-[2.5rem] p-10 text-white flex flex-col justify-between shadow-2xl shadow-slate-900/40 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 rounded-full -mr-16 -mt-16 blur-3xl" />
+            <span className="text-[10px] font-black opacity-40 uppercase tracking-[0.4em] relative z-10">Final Amount Payable</span>
+            <div className="flex items-baseline gap-3 relative z-10">
+              <span className="text-2xl font-black text-orange-500">{company.currency}</span>
+              <span className="text-7xl font-black tracking-tighter leading-none">{totalAmount.toLocaleString()}</span>
             </div>
-            <div className="mt-4 flex items-center gap-2 text-[10px] font-bold bg-white/10 w-fit px-3 py-1 rounded-full backdrop-blur-sm">
-              <CheckCircle2 size={12} /> Auto-Computed Row Totals
+            <div className="mt-6 flex items-center gap-3 text-[10px] font-black bg-white/5 w-fit px-5 py-2.5 rounded-full backdrop-blur-md relative z-10 border border-white/5 uppercase tracking-widest">
+              <CheckCircle2 size={14} className="text-orange-500" /> Ledger Balance Updates Live
             </div>
           </div>
         </div>
 
-        {/* Transaction Grid */}
-        <div className="p-8" ref={gridContainerRef}>
-          <div className="overflow-x-auto">
-            <table className="w-full border-separate border-spacing-y-2">
+        {/* Dynamic Grid */}
+        <div className="p-10" ref={gridContainerRef}>
+          <div className="overflow-x-auto scrollbar-hide">
+            <table className="w-full border-separate border-spacing-y-3">
               <thead>
-                <tr className="text-left text-[10px] font-black text-gray-400 uppercase tracking-widest">
-                  <th className="px-4">Product / Service</th>
-                  <th className="px-4 text-right w-24">Qty</th>
-                  <th className="px-4 text-right w-32">Rate</th>
-                  <th className="px-4 text-right w-24">Disc %</th>
-                  <th className="px-4 text-right w-36">Total</th>
-                  <th className="w-12"></th>
+                <tr className="text-left text-[11px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  <th className="px-6 pb-2">Product Description</th>
+                  <th className="px-4 pb-2 text-right w-24">QTY</th>
+                  <th className="px-4 pb-2 text-right w-36">UNIT RATE</th>
+                  <th className="px-4 pb-2 text-right w-24">DISC %</th>
+                  <th className="px-6 pb-2 text-right w-44">LINE TOTAL</th>
+                  <th className="w-16"></th>
                 </tr>
               </thead>
               <tbody>
@@ -344,12 +342,12 @@ const Vouchers: React.FC<VouchersProps> = ({
                       <select 
                         data-pos={`${index}-0`}
                         onKeyDown={e => handleKeyDown(e, index, 0)}
-                        className="w-full bg-gray-50 border-2 border-transparent focus:border-indigo-500 rounded-2xl px-5 py-4 outline-none font-bold text-gray-900 appearance-none"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/30 focus:bg-white rounded-3xl px-6 py-5 outline-none font-black text-slate-900 appearance-none transition-all shadow-sm"
                         value={vItem.itemId}
                         onChange={e => handleItemChange(index, 'itemId', e.target.value)}
                       >
-                        <option value="">Select Item...</option>
-                        {items.map(i => <option key={i.id} value={i.id}>{i.sku} - {i.name}</option>)}
+                        <option value="">Choose Item...</option>
+                        {items.map(i => <option key={i.id} value={i.id}>{i.sku} — {i.name}</option>)}
                       </select>
                     </td>
                     <td className="px-1">
@@ -359,7 +357,7 @@ const Vouchers: React.FC<VouchersProps> = ({
                         onKeyDown={e => handleKeyDown(e, index, 1)}
                         value={vItem.quantity}
                         onChange={e => handleItemChange(index, 'quantity', Number(e.target.value))}
-                        className="w-full bg-gray-50 border-2 border-transparent focus:border-indigo-500 p-4 rounded-2xl text-right font-bold outline-none"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/30 focus:bg-white p-5 rounded-3xl text-right font-black outline-none transition-all shadow-sm"
                       />
                     </td>
                     <td className="px-1">
@@ -369,7 +367,7 @@ const Vouchers: React.FC<VouchersProps> = ({
                         onKeyDown={e => handleKeyDown(e, index, 2)}
                         value={vItem.rate}
                         onChange={e => handleItemChange(index, 'rate', Number(e.target.value))}
-                        className="w-full bg-gray-50 border-2 border-transparent focus:border-indigo-500 p-4 rounded-2xl text-right font-bold outline-none"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/30 focus:bg-white p-5 rounded-3xl text-right font-black outline-none transition-all shadow-sm"
                       />
                     </td>
                     <td className="px-1">
@@ -379,15 +377,15 @@ const Vouchers: React.FC<VouchersProps> = ({
                         onKeyDown={e => handleKeyDown(e, index, 3)}
                         value={vItem.discount}
                         onChange={e => handleItemChange(index, 'discount', Number(e.target.value))}
-                        className="w-full bg-gray-50 border-2 border-transparent focus:border-indigo-500 p-4 rounded-2xl text-right font-bold outline-none"
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/30 focus:bg-white p-5 rounded-3xl text-right font-black outline-none transition-all shadow-sm"
                       />
                     </td>
-                    <td className="px-4 text-right">
-                      <span className="font-black text-indigo-600 text-lg">{(vItem.amount || 0).toLocaleString()}</span>
+                    <td className="px-6 text-right">
+                      <span className="font-black text-orange-600 text-xl tracking-tighter">{(vItem.amount || 0).toLocaleString()}</span>
                     </td>
                     <td>
-                      <button onClick={() => removeRow(index)} className="p-2 text-gray-300 hover:text-rose-500 transition-colors">
-                        <Trash2 size={18} />
+                      <button onClick={() => removeRow(index)} className="p-3 text-slate-300 hover:text-rose-500 transition-all hover:bg-rose-50 rounded-2xl active:scale-90">
+                        <Trash2 size={20} />
                       </button>
                     </td>
                   </tr>
@@ -396,30 +394,34 @@ const Vouchers: React.FC<VouchersProps> = ({
             </table>
           </div>
 
-          <div className="mt-8 flex justify-between items-start pt-8 border-t">
-            <div className="w-full max-w-lg space-y-4">
+          {/* Action Bar */}
+          <div className="mt-12 flex flex-col md:flex-row justify-between items-start gap-12 pt-10 border-t border-slate-50">
+            <div className="w-full max-w-xl space-y-6">
                <button 
                  onClick={addNewRow}
-                 className="flex items-center gap-2 text-indigo-600 font-black text-[10px] uppercase tracking-widest hover:bg-indigo-50 px-6 py-3 rounded-2xl transition-all border-2 border-dashed border-indigo-200"
+                 className="flex items-center gap-3 text-orange-600 font-black text-[11px] uppercase tracking-widest hover:bg-orange-600 hover:text-white px-8 py-4 rounded-[1.5rem] transition-all border-2 border-dashed border-orange-200 hover:border-orange-600"
                >
-                 <Plus size={16} /> Append Item Line (Ctrl+A)
+                 <Plus size={18} /> Append Record Line (Ctrl+A)
                </button>
-               <textarea 
-                 value={narration} 
-                 onChange={e => setNarration(e.target.value)}
-                 rows={2}
-                 placeholder="Enter Narration / Remarks..."
-                 className="w-full bg-slate-50 border-none rounded-3xl p-6 text-sm italic font-medium outline-none focus:ring-2 ring-indigo-500 transition-all"
-               />
+               <div className="space-y-2">
+                 <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1">Internal Narration</label>
+                 <textarea 
+                   value={narration} 
+                   onChange={e => setNarration(e.target.value)}
+                   rows={3}
+                   placeholder="Enter official transaction remarks..."
+                   className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/10 rounded-[2rem] p-6 text-sm italic font-bold outline-none focus:bg-white transition-all shadow-inner"
+                 />
+               </div>
             </div>
             
-            <div className="flex gap-4">
-               <button onClick={resetForm} className="px-10 py-5 rounded-3xl font-black uppercase text-[10px] tracking-widest text-gray-400 hover:bg-gray-100 transition-all">Cancel</button>
+            <div className="flex gap-4 self-end pb-2">
+               <button onClick={resetForm} className="px-12 py-6 rounded-[2rem] font-black uppercase text-[11px] tracking-widest text-slate-400 hover:bg-slate-100 transition-all">Clear Terminal</button>
                <button 
                  onClick={() => handleSubmit()}
-                 className="px-12 py-5 bg-indigo-600 text-white rounded-[1.5rem] font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:bg-indigo-700 shadow-2xl shadow-indigo-600/30 transition-all active:scale-95"
+                 className="px-16 py-6 bg-orange-600 text-white rounded-[2rem] font-black uppercase tracking-[0.2em] text-[12px] flex items-center gap-4 hover:bg-orange-700 shadow-[0_25px_50px_-12px_rgba(234,88,12,0.4)] active:scale-95 transition-all"
                >
-                 <Save size={18} /> Post & Print Invoice
+                 <Save size={22} /> Commit & Launch Print
                </button>
             </div>
           </div>

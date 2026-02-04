@@ -34,142 +34,161 @@ const CompanySettings: React.FC<CompanySettingsProps> = ({ company, setCompany, 
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+    <div className="max-w-5xl mx-auto space-y-10 animate-in slide-in-from-bottom-6 duration-700">
       <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Company & Print Configuration</h1>
-          <p className="text-gray-500">Manage your business identity and voucher layouts.</p>
+        <div className="space-y-1">
+          <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tighter">System Configuration</h1>
+          <p className="text-slate-400 font-bold uppercase text-[10px] tracking-widest">Global Profile & Print Layout</p>
         </div>
         {showToast && (
-          <div className="flex items-center gap-2 bg-emerald-500 text-white px-4 py-2 rounded-xl font-bold shadow-lg animate-bounce">
+          <div className="flex items-center gap-3 bg-emerald-500 text-white px-8 py-3 rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-2xl shadow-emerald-500/30 animate-in zoom-in">
             <CheckCircle2 size={18} />
-            Changes Saved Successfully!
+            Config Updated
           </div>
         )}
       </div>
 
-      <div className="flex bg-white p-1 rounded-2xl border w-fit">
+      <div className="flex bg-slate-200/50 p-1.5 rounded-[1.5rem] w-fit shadow-inner">
         <button 
           onClick={() => setActiveTab('profile')}
-          className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'profile' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+          className={`px-8 py-3.5 rounded-[1.2rem] font-black uppercase text-[11px] tracking-widest transition-all flex items-center gap-3 ${activeTab === 'profile' ? 'bg-white text-orange-600 shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
         >
           <Building2 size={18} />
-          Company Profile
+          Business Profile
         </button>
         <button 
           onClick={() => setActiveTab('template')}
-          className={`px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${activeTab === 'template' ? 'bg-indigo-600 text-white' : 'text-gray-500 hover:bg-gray-50'}`}
+          className={`px-8 py-3.5 rounded-[1.2rem] font-black uppercase text-[11px] tracking-widest transition-all flex items-center gap-3 ${activeTab === 'template' ? 'bg-white text-orange-600 shadow-md' : 'text-slate-500 hover:text-slate-800'}`}
         >
           <LayoutTemplate size={18} />
-          Print Template
+          Invoice Logic
         </button>
       </div>
 
-      <div className="bg-white rounded-3xl border shadow-sm overflow-hidden min-h-[600px]">
+      <div className="bg-white rounded-[3rem] border border-slate-100 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.08)] overflow-hidden">
         {activeTab === 'profile' ? (
-          <form onSubmit={handleSaveCompany} className="p-10 space-y-10">
-            <div className="flex flex-col md:flex-row gap-10 items-start">
-              <div className="w-full md:w-64 space-y-4">
-                 <div className="bg-slate-50 border-2 border-dashed rounded-[2.5rem] p-8 flex flex-col items-center justify-center text-center">
-                    <img src="logo.png" alt="Company Logo" className="w-32 h-32 object-contain mb-4 drop-shadow-lg" />
-                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active Brand Identity</p>
+          <form onSubmit={handleSaveCompany} className="p-12 space-y-12">
+            <div className="flex flex-col lg:flex-row gap-16 items-start">
+              <div className="w-full lg:w-72 space-y-6">
+                 <div className="bg-[#0F172A] rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center shadow-2xl shadow-slate-900/20 group relative overflow-hidden">
+                    <div className="absolute inset-0 bg-orange-600/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <img src="logo.png" alt="SM" className="w-40 h-40 object-contain mb-6 drop-shadow-[0_0_15px_rgba(234,88,12,0.4)] animate-pulse-slow" />
+                    <p className="text-[10px] font-black text-orange-500 uppercase tracking-[0.4em] relative z-10">Brand Identity</p>
                  </div>
-                 <div className="bg-orange-50 p-4 rounded-2xl border border-orange-100">
-                    <p className="text-[10px] font-black text-orange-600 uppercase mb-1">Branding Tip</p>
-                    <p className="text-[10px] text-orange-800 leading-tight">Your logo is used on the dashboard, login screen, and printed vouchers.</p>
+                 <div className="bg-orange-50 p-6 rounded-[1.5rem] border border-orange-100">
+                    <p className="text-[10px] font-black text-orange-600 uppercase mb-2 tracking-widest">Hardware Preview</p>
+                    <p className="text-[11px] text-orange-800 font-bold leading-relaxed">This logo is hardcoded into your terminal firmware and printed vouchers.</p>
                  </div>
               </div>
               
-              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-6">
-                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Building2 className="text-indigo-600" /> Basic Information</h3>
-                  <div className="space-y-4">
-                    <InputField label="Company Name" value={tempCompany.name} onChange={v => setTempCompany({...tempCompany, name: v})} icon={<Building2 size={16}/>} />
-                    <div className="space-y-1">
-                      <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Office Address</label>
+              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div className="space-y-8">
+                  <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                    Legal Registration
+                  </h3>
+                  <div className="space-y-6">
+                    <InputField label="Trade Name" value={tempCompany.name} onChange={v => setTempCompany({...tempCompany, name: v})} />
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1">HQ Address</label>
                       <textarea 
-                        className="w-full bg-gray-50 rounded-2xl p-4 text-sm font-medium outline-none focus:ring-2 ring-indigo-500 h-24"
+                        className="w-full bg-slate-50 rounded-[1.5rem] p-5 text-sm font-bold outline-none focus:bg-white focus:ring-4 ring-orange-500/5 border-2 border-transparent focus:border-orange-500/20 transition-all h-28"
                         value={tempCompany.address}
                         onChange={e => setTempCompany({...tempCompany, address: e.target.value})}
                       />
                     </div>
-                    <InputField label="VAT / Tax ID" value={tempCompany.vatNumber} onChange={v => setTempCompany({...tempCompany, vatNumber: v})} />
+                    <InputField label="VAT Registration" value={tempCompany.vatNumber} onChange={v => setTempCompany({...tempCompany, vatNumber: v})} />
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Phone className="text-indigo-600" /> Contact & Web</h3>
-                  <div className="space-y-4">
-                    <InputField label="Contact Phone" value={tempCompany.phone || ''} onChange={v => setTempCompany({...tempCompany, phone: v})} icon={<Phone size={16}/>} />
-                    <InputField label="Support Email" value={tempCompany.email || ''} onChange={v => setTempCompany({...tempCompany, email: v})} icon={<Mail size={16}/>} />
-                    <InputField label="Website" value={tempCompany.website || ''} onChange={v => setTempCompany({...tempCompany, website: v})} icon={<Globe size={16}/>} />
+                <div className="space-y-8">
+                  <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                    Digital Presence
+                  </h3>
+                  <div className="space-y-6">
+                    <InputField label="System Phone" value={tempCompany.phone || ''} onChange={v => setTempCompany({...tempCompany, phone: v})} />
+                    <InputField label="System Email" value={tempCompany.email || ''} onChange={v => setTempCompany({...tempCompany, email: v})} />
+                    <InputField label="Company URL" value={tempCompany.website || ''} onChange={v => setTempCompany({...tempCompany, website: v})} />
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Landmark className="text-indigo-600" /> Banking Details</h3>
-                  <div className="space-y-4">
-                    <InputField label="Bank Name" value={tempCompany.bankName || ''} onChange={v => setTempCompany({...tempCompany, bankName: v})} icon={<Landmark size={16}/>} />
-                    <InputField label="Account Number" value={tempCompany.accountNumber || ''} onChange={v => setTempCompany({...tempCompany, accountNumber: v})} icon={<CreditCard size={16}/>} />
+                <div className="space-y-8">
+                  <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                    Banking Protocol
+                  </h3>
+                  <div className="space-y-6">
+                    <InputField label="Primary Bank" value={tempCompany.bankName || ''} onChange={v => setTempCompany({...tempCompany, bankName: v})} />
+                    <InputField label="Account Number" value={tempCompany.accountNumber || ''} onChange={v => setTempCompany({...tempCompany, accountNumber: v})} />
                   </div>
                 </div>
 
-                <div className="space-y-6">
-                  <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Eye className="text-indigo-600" /> Invoice Content</h3>
-                  <div className="space-y-4">
-                    <InputField label="Header Text (Global)" value={tempCompany.invoiceHeader || ''} onChange={v => setTempCompany({...tempCompany, invoiceHeader: v})} />
-                    <InputField label="Footer Disclaimer" value={tempCompany.invoiceFooter || ''} onChange={v => setTempCompany({...tempCompany, invoiceFooter: v})} />
+                <div className="space-y-8">
+                  <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                    <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                    Document Text
+                  </h3>
+                  <div className="space-y-6">
+                    <InputField label="Global Header" value={tempCompany.invoiceHeader || ''} onChange={v => setTempCompany({...tempCompany, invoiceHeader: v})} />
+                    <InputField label="Global Footer" value={tempCompany.invoiceFooter || ''} onChange={v => setTempCompany({...tempCompany, invoiceFooter: v})} />
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="pt-8 border-t flex justify-end">
-              <button type="submit" className="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 active:scale-95 transition-all flex items-center gap-2">
-                <Save size={18} /> Update Company Profile
+            <div className="pt-10 border-t border-slate-50 flex justify-end">
+              <button type="submit" className="bg-orange-600 text-white px-12 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-sm hover:bg-orange-700 shadow-xl shadow-orange-600/30 active:scale-95 transition-all flex items-center gap-3">
+                <Save size={20} /> Deploy Changes
               </button>
             </div>
           </form>
         ) : (
-          <form onSubmit={handleSaveSettings} className="p-10 space-y-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-8">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><LayoutTemplate className="text-indigo-600" /> Display Toggles</h3>
-                <div className="grid grid-cols-1 gap-4">
-                  <ToggleField label="Show Company Phone" checked={tempSettings.showPhone} onChange={v => setTempSettings({...tempSettings, showPhone: v})} />
-                  <ToggleField label="Show Company Email" checked={tempSettings.showEmail} onChange={v => setTempSettings({...tempSettings, showEmail: v})} />
-                  <ToggleField label="Show Bank / Account Info" checked={tempSettings.showBankInfo} onChange={v => setTempSettings({...tempSettings, showBankInfo: v})} />
-                  <ToggleField label="Show SKU Column" checked={tempSettings.showSKU} onChange={v => setTempSettings({...tempSettings, showSKU: v})} />
-                  <ToggleField label="Show Discount Column" checked={tempSettings.showDiscount} onChange={v => setTempSettings({...tempSettings, showDiscount: v})} />
-                  <ToggleField label="Show Tax Column" checked={tempSettings.showTax} onChange={v => setTempSettings({...tempSettings, showTax: v})} />
+          <form onSubmit={handleSaveSettings} className="p-12 space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="space-y-10">
+                <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                  <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                  UI Field Visibility
+                </h3>
+                <div className="grid grid-cols-1 gap-5">
+                  <ToggleField label="Display Phone Number" checked={tempSettings.showPhone} onChange={v => setTempSettings({...tempSettings, showPhone: v})} />
+                  <ToggleField label="Display Email Channel" checked={tempSettings.showEmail} onChange={v => setTempSettings({...tempSettings, showEmail: v})} />
+                  <ToggleField label="Display Settlement Bank" checked={tempSettings.showBankInfo} onChange={v => setTempSettings({...tempSettings, showBankInfo: v})} />
+                  <ToggleField label="Display SKU/UPC Column" checked={tempSettings.showSKU} onChange={v => setTempSettings({...tempSettings, showSKU: v})} />
+                  <ToggleField label="Display Discount/Promos" checked={tempSettings.showDiscount} onChange={v => setTempSettings({...tempSettings, showDiscount: v})} />
+                  <ToggleField label="Display Tax Breakdown" checked={tempSettings.showTax} onChange={v => setTempSettings({...tempSettings, showTax: v})} />
                 </div>
               </div>
 
-              <div className="space-y-8">
-                <h3 className="font-bold text-lg flex items-center gap-2 border-b pb-2"><Printer className="text-indigo-600" /> Page & Titles</h3>
-                <div className="space-y-6">
+              <div className="space-y-10">
+                <h3 className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 flex items-center gap-3 border-b border-slate-50 pb-4">
+                  <div className="w-1.5 h-1.5 bg-orange-600 rounded-full" /> 
+                  Voucher Metadata
+                </h3>
+                <div className="space-y-8">
                   <div>
-                    <label className="text-xs font-black text-gray-400 uppercase tracking-widest block mb-2">Default Paper Size</label>
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3 ml-1">Terminal Print Standard</label>
                     <select 
-                      className="w-full bg-gray-50 p-4 rounded-2xl font-bold outline-none focus:ring-2 ring-indigo-500"
+                      className="w-full bg-slate-50 p-5 rounded-[1.5rem] font-black text-slate-900 outline-none focus:ring-4 ring-orange-500/5 border-2 border-transparent focus:border-orange-500/20 appearance-none"
                       value={tempSettings.paperSize}
                       onChange={e => setTempSettings({...tempSettings, paperSize: e.target.value as any})}
                     >
-                      <option value="A4">A4 (Standard)</option>
-                      <option value="A5">A5 (Half Size)</option>
-                      <option value="POS80">Thermal 80mm</option>
+                      <option value="A4">A4 ISO 216 Standard</option>
+                      <option value="A5">A5 Retail Compact</option>
+                      <option value="POS80">80mm Thermal Receipt</option>
                     </select>
                   </div>
-                  <InputField label="Sales Voucher Title" value={tempSettings.salesTitle} onChange={v => setTempSettings({...tempSettings, salesTitle: v})} />
-                  <InputField label="Purchase Voucher Title" value={tempSettings.purchaseTitle} onChange={v => setTempSettings({...tempSettings, purchaseTitle: v})} />
-                  <InputField label="Global Footer Note" value={tempSettings.footerNote} onChange={v => setTempSettings({...tempSettings, footerNote: v})} />
+                  <InputField label="Sales Header Title" value={tempSettings.salesTitle} onChange={v => setTempSettings({...tempSettings, salesTitle: v})} />
+                  <InputField label="Purchase Header Title" value={tempSettings.purchaseTitle} onChange={v => setTempSettings({...tempSettings, purchaseTitle: v})} />
+                  <InputField label="Bottom Legal Disclaimer" value={tempSettings.footerNote} onChange={v => setTempSettings({...tempSettings, footerNote: v})} />
                 </div>
               </div>
             </div>
 
-            <div className="pt-8 border-t flex justify-end">
-              <button type="submit" className="bg-indigo-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-indigo-700 shadow-xl shadow-indigo-600/20 active:scale-95 transition-all flex items-center gap-2">
-                <Save size={18} /> Apply Print Settings
+            <div className="pt-10 border-t border-slate-50 flex justify-end">
+              <button type="submit" className="bg-orange-600 text-white px-12 py-5 rounded-[1.5rem] font-black uppercase tracking-widest text-sm hover:bg-orange-700 shadow-xl shadow-orange-600/30 active:scale-95 transition-all flex items-center gap-3">
+                <Save size={20} /> Update Layouts
               </button>
             </div>
           </form>
@@ -179,30 +198,30 @@ const CompanySettings: React.FC<CompanySettingsProps> = ({ company, setCompany, 
   );
 };
 
-const InputField: React.FC<{ label: string, value: string, onChange: (v: string) => void, icon?: React.ReactNode }> = ({ label, value, onChange, icon }) => (
-  <div className="space-y-1">
-    <label className="text-xs font-black text-gray-400 uppercase tracking-widest block">{label}</label>
-    <div className="relative">
-      {icon && <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">{icon}</div>}
-      <input 
-        type="text" 
-        value={value} 
-        onChange={e => onChange(e.target.value)} 
-        className={`w-full bg-gray-50 rounded-2xl p-4 text-sm font-bold outline-none focus:ring-2 ring-indigo-500 ${icon ? 'pl-11' : ''}`}
-      />
-    </div>
+const InputField: React.FC<{ label: string, value: string, onChange: (v: string) => void }> = ({ label, value, onChange }) => (
+  <div className="space-y-2">
+    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block ml-1">{label}</label>
+    <input 
+      type="text" 
+      value={value} 
+      onChange={e => onChange(e.target.value)} 
+      className="w-full bg-slate-50 border-2 border-transparent focus:border-orange-500/20 rounded-[1.5rem] p-5 text-sm font-black text-slate-800 outline-none focus:bg-white focus:ring-4 ring-orange-500/5 transition-all"
+    />
   </div>
 );
 
 const ToggleField: React.FC<{ label: string, checked: boolean, onChange: (v: boolean) => void }> = ({ label, checked, onChange }) => (
-  <label className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl cursor-pointer hover:bg-gray-100 transition-all border border-transparent hover:border-indigo-100">
-    <span className="text-sm font-bold text-gray-700">{label}</span>
-    <input 
-      type="checkbox" 
-      checked={checked} 
-      onChange={e => onChange(e.target.checked)}
-      className="w-5 h-5 accent-indigo-600 rounded"
-    />
+  <label className="flex items-center justify-between p-6 bg-slate-50 rounded-[1.5rem] cursor-pointer hover:bg-white border-2 border-transparent hover:border-orange-500/10 transition-all group">
+    <span className="text-[11px] font-black uppercase tracking-widest text-slate-500 group-hover:text-slate-800 transition-colors">{label}</span>
+    <div className="relative inline-flex items-center cursor-pointer">
+      <input 
+        type="checkbox" 
+        checked={checked} 
+        onChange={e => onChange(e.target.checked)}
+        className="sr-only peer"
+      />
+      <div className="w-14 h-7 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[4px] after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-6 after:transition-all peer-checked:bg-orange-600"></div>
+    </div>
   </label>
 );
 
